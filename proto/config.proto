@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+enum ChatGTProvider {
+  NONE = 0;
+  OPENAI = 1;
+  MICROSOFT = 2;
+}
+
+message AccountInfo {
+  string user_name = 1;
+  string password = 2;
+}
+
+message ChatGPTConfig {
+  ChatGTProvider provider = 1;
+  // only need either account info or accees token
+  oneof login_info {
+    AccountInfo account_info = 2;
+    string access_token = 3;
+  }
+  // relative path to workspace
+  string cookie_path = 4;
+  string proxy = 5;
+}
+
+message BotConfig {
+  string name = 1;
+  ChatGPTConfig chatgpt_config = 2;
+  // Wechat uses this to check whether response
+  string trigger_keyword = 3;
+}
+
+message WechatConfig { repeated BotConfig bot_config = 1; }

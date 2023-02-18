@@ -1,0 +1,5 @@
+/bazel-*
+*.swp
+*.pyc
+*.vscode
+/.bazel*

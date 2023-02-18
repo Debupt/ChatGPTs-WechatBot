@@ -1,0 +1,21 @@
+bot_config {
+    name: "openai"
+    chatgpt_config {
+        provider: OPENAI
+        account_info {
+            user_name: ""
+            password: ""
+        }
+        proxy: ""
+    }
+    trigger_keyword: ""
+}
+
+bot_config {
+    name: "microsoft"
+    chatgpt_config {
+        provider: MICROSOFT
+        cookie_path: "config/cookies.json"
+    }
+    trigger_keyword: ""
+}

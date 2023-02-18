@@ -1,0 +1,2 @@
+EdgeGPT==0.0.48
+revChatGPT==2.3.0
