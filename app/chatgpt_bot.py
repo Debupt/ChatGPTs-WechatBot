@@ -7,7 +7,7 @@ import click
 import time
 
 CONFIG_FILE = 'config/config'
-CHROME_DRIVER = 'bazel-chatgpt_bot/external/chrome_driver/chromedriver'
+CHROME_DRIVER = 'bazel-ChatGPTs-WechatBot/external/chrome_driver/chromedriver'
 
 
 @click.group()

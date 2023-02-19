@@ -4,14 +4,11 @@ Wechat bot to auto reply with different ChatGPTs
 
 ## Installation
 
-1. install bazel build framework, please refer: https://bazel.build/install/ubuntu?hl=en
-2. install python dependencies
+run `setup.sh` to install Bazel and Python dependencies
 
 ```bash
-pip3 install -r requirements.txt
+sudo ./setup.sh
 ```
-
-3. prepare ChatGPT accounts
 
 ## Configuration
 
@@ -73,6 +70,7 @@ bazel run //app:wechat_bot -- run
 
 ## TODO
 
+- [ ] add headless mode
 - [ ] find a better way check chatroom contents instead of polling
 - [ ] use async to reply to different chatroom
 - [ ] different chatroom with fixed ChatGPT thread that could collect user favorites
