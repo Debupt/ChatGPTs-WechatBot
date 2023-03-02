@@ -70,10 +70,10 @@ bazel run //app:wechat_bot -- run
 
 ## TODO
 
-- [ ] add headless mode
-- [ ] find a better way check chatroom contents instead of polling
-- [ ] use async to reply to different chatroom
-- [ ] different chatroom with fixed ChatGPT thread that could collect user favorites
+- [x] add headless mode
+- [x] find a better way check chatroom contents instead of polling
+- [x] use async to reply to different chatroom
+- [x] different chatroom with fixed ChatGPT thread that could collect user favorites
 
 ## Thanks
 

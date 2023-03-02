@@ -1,4 +1,6 @@
-from chatgpt.chatgpt import chatgpt_factory
+import logging
+
+from chatgpt.chatgpt import chatgpt_factory, ChatgptFactory
 from proto.config_pb2 import WechatConfig
 from rpa.selenium_wechat import SeleniumWechatBot
 from utils.file_utils import read_proto
@@ -7,12 +9,23 @@ import click
 import time
 
 CONFIG_FILE = 'config/config'
-CHROME_DRIVER = 'bazel-ChatGPTs-WechatBot/external/chrome_driver/chromedriver'
+CHROME_DRIVER = 'bazel-ChatGPTs-WechatBot/external/firefox_driver/geckodriver'
 
 
 @click.group()
 def main():
     pass
+
+
+def setup_logger():
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
+    logger_format = logging.Formatter(
+        '[%(levelname)s][%(asctime)s][%(filename)s:%(lineno)d]: %(message)s')
+
+    stream_handler = logging.StreamHandler()
+    stream_handler.setFormatter(logger_format)
+    logger.addHandler(stream_handler)
 
 
 def _parse_config(config_file):
@@ -29,13 +42,6 @@ def _chatgpt_get_answer(bot_config, prompt):
     return chatgpt_inst.capture_answer(prompt)
 
 
-def _get_chatgpts(config):
-    keyword_to_chatgpt = {}
-    for keyword, bot_config in config.items():
-        keyword_to_chatgpt[keyword] = chatgpt_factory(bot_config)
-    return keyword_to_chatgpt
-
-
 @main.command()
 @click.option('--prompt', default='hello world')
 def chatgpt_test(prompt):
@@ -47,18 +53,20 @@ def chatgpt_test(prompt):
 
 @main.command()
 def run():
-    config = _parse_config(CONFIG_FILE)
+    config = read_proto(CONFIG_FILE, WechatConfig)
 
-    chatgpts = _get_chatgpts(config)
-    selenium_bot = SeleniumWechatBot(CHROME_DRIVER, chatgpts)
-    selenium_bot.login()
+    chatgpts = ChatgptFactory(config)
+    selenium_wechat_bot = SeleniumWechatBot(CHROME_DRIVER, chatgpts)
+    selenium_wechat_bot.login()
     while True:
         try:
-            selenium_bot.one_interation()
+            selenium_wechat_bot.one_iteration()
         except Exception as e:
+            logging.warning(e)
             pass
-        time.sleep(1)
+        selenium_wechat_bot.browser.implicitly_wait(2)
 
 
 if __name__ == "__main__":
+    setup_logger()
     main()

@@ -2,34 +2,11 @@ workspace(name = "wechat_bot")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
-# find corresponding chrome version: https://chromedriver.chromium.org/home
 http_archive(
-    name = "chrome_driver",
-    build_file = "//third_party:chrome_driver.BUILD",
-    sha256 = "40d0ee4e2d821d7fe8be3b0601579e7665f58bd9296372c1dea68e6f9325acad",
-    url = "https://chromedriver.storage.googleapis.com/110.0.5481.77/chromedriver_linux64.zip",
-)
-
-http_archive(
-    name = "chrome_driver_111",
-    build_file = "//third_party:chrome_driver.BUILD",
-    sha256 = "",
-    url = "https://chromedriver.storage.googleapis.com/111.0.5563.19/chromedriver_linux64.zip"
-)
-
-http_archive(
-    name = "chrome_driver_109",
-    build_file = "//third_party:chrome_driver.BUILD",
-    sha256 = "",
-    url = "https://chromedriver.storage.googleapis.com/109.0.5414.74/chromedriver_linux64.zip"
-)
-
-http_archive(
-    name = "selenium_py_400",
-    build_file = "//third_party:selenium_py.BUILD",
-    sha256 = "a9779ddc69cf03b75d94062c5e948f763919cf3341c77272f94cd05e6b4c7b32",
-    type = "zip",
-    url = "https://files.pythonhosted.org/packages/2b/b6/53b86357953961faaccdf5413c83d72a2efaf279b73bc80d3cb2e8d1c64c/selenium-4.0.0a6.post2-py2.py3-none-any.whl#sha256=a9779ddc69cf03b75d94062c5e948f763919cf3341c77272f94cd05e6b4c7b32",
+    name = "firefox_driver",
+    build_file = "//third_party:firefox_driver.BUILD",
+    sha256 = "1eab226bf009599f5aa1d77d9ed4c374e10a03fd848b500be1b32cefd2cbec64",
+    url = "https://github.com/mozilla/geckodriver/releases/download/v0.32.2/geckodriver-v0.32.2-linux64.tar.gz",
 )
 
 http_archive(

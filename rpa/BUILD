@@ -6,6 +6,7 @@ py_binary(
         "selenium_wechat.py",
     ],
     deps = [
+        "//utils:utils",
         "//chatgpt:chatgpt",
         "@selenium_py//:selenium",
     ],

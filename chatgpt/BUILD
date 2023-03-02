@@ -6,6 +6,7 @@ py_library(
         "chatgpt.py",
     ],
     deps = [
+        "//utils:utils",
         "//proto:config_proto",
     ],
 )

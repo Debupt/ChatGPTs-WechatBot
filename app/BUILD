@@ -14,6 +14,6 @@ py_binary(
     ],
     data = [
         "//config:config_files",
-        "@chrome_driver//:chrome_driver",
+        "@firefox_driver",
     ],
 )
