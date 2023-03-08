@@ -1,8 +1,10 @@
+import datetime
 import logging
 
 from chatgpt.chatgpt import chatgpt_factory, ChatgptFactory
 from proto.config_pb2 import WechatConfig
 from rpa.selenium_wechat import SeleniumWechatBot
+from rpa.playwright_wechat import PlayWrightWeChat
 from utils.file_utils import read_proto
 
 import click
@@ -10,6 +12,9 @@ import time
 
 CONFIG_FILE = 'config/config'
 CHROME_DRIVER = 'bazel-ChatGPTs-WechatBot/external/firefox_driver/geckodriver'
+
+FEED_DOG_USER = 'File Transfer'
+FEED_DOG_INTERVAL_IN_SEC = 2 * 60 * 60
 
 
 @click.group()
@@ -65,6 +70,29 @@ def run():
             logging.warning(e)
             pass
         selenium_wechat_bot.browser.implicitly_wait(2)
+
+
+@main.command()
+def run_v2():
+    config = read_proto(CONFIG_FILE, WechatConfig)
+
+    chatgpts = ChatgptFactory(config)
+    playwright_wechat_bot = PlayWrightWeChat(chatgpts)
+    playwright_wechat_bot.playwright_setup()
+    playwright_wechat_bot.login()
+
+    start_time = datetime.datetime.now()
+    while True:
+        try:
+            playwright_wechat_bot.one_iteration()
+            if datetime.datetime.now() - start_time > datetime.timedelta(
+                    seconds=FEED_DOG_INTERVAL_IN_SEC):
+                start_time = datetime.datetime.now()
+                playwright_wechat_bot.reload_page()
+                playwright_wechat_bot.feed_dog(FEED_DOG_USER)
+            time.sleep(1)
+        except Exception as err:
+            logging.error(err)
 
 
 if __name__ == "__main__":

@@ -6,17 +6,18 @@ from queue import Queue
 from proto.config_pb2 import ChatGTProvider
 
 from EdgeGPT import Chatbot as microsoft_chatgpt
-from revChatGPT.V1 import Chatbot as ponyai_chatgpt
+from revChatGPT.V1 import Chatbot as openai_raw
+from revChatGPT.V3 import Chatbot as openai_api
 
 from concurrent.futures import ThreadPoolExecutor
 
-chatgpt_thread_pool = ThreadPoolExecutor(max_workers=2)
+chatgpt_thread_pool = ThreadPoolExecutor(max_workers=3)
 
 
 class ChatGPT:
 
     def __init__(self):
-        self._answer = ''
+        self.answer = ''
         self.prompts_queue = Queue()
         self.replies_queue = {}
 
@@ -26,16 +27,17 @@ class ChatGPT:
                 continue
             nickname, prompt = self.prompts_queue.get()
             self.reply(prompt, nickname)
-            logging.info(f'{nickname}: {prompt}, {self._answer}')
+            logging.info(f'{nickname}: {prompt}, {self.answer}')
             if nickname not in self.replies_queue.keys():
                 self.replies_queue[nickname] = Queue()
-            self.replies_queue[nickname].put(self._answer)
+            self.answer = '\n\n\n'.join(self.answer.split())
+            self.replies_queue[nickname].put(self.answer.strip())
 
     def reply(self, prompt, nickname):
         pass
 
 
-class OpenAiChatGPT(ChatGPT):
+class OpenAiChatGPTRaw(ChatGPT):
 
     def __init__(self, config):
         super().__init__()
@@ -45,19 +47,19 @@ class OpenAiChatGPT(ChatGPT):
             "proxy": config.proxy,
         }
         self._conversation_id = {}
-        self._openai_chatgpt = ponyai_chatgpt(config=self._config)
+        self._openai_chatgpt = openai_raw(config=self._config)
 
     def reply(self, prompt, nickname):
         conversation_id = None
         prev_message = None
-        self._answer = ''
+        self.answer = ''
         logging.info(prompt)
         if nickname in self._conversation_id.keys():
             conversation_id = self._conversation_id[nickname]
         if not conversation_id and len(self._conversation_id.keys()) > 1:
             self._openai_chatgpt.reset_chat()
         for data in self._openai_chatgpt.ask(prompt=prompt, conversation_id=conversation_id):
-            self._answer += data['message'][len(prev_message):]
+            self.answer += data['message'][len(prev_message):]
             prev_message = data['message']
         if not conversation_id:
             self._conversation_id[nickname] = self._openai_chatgpt.conversation_id
@@ -71,7 +73,7 @@ class MicroSoftChatGPT(ChatGPT):
 
     async def _reply(self, prompt, _):
         self._microsoft_chatgpt = microsoft_chatgpt()
-        self._answer = (await self._microsoft_chatgpt.ask(
+        self.answer = (await self._microsoft_chatgpt.ask(
             prompt=prompt))["item"]["messages"][1]["adaptiveCards"][0]["body"][0]["text"]
         await self._microsoft_chatgpt.close()
 
@@ -80,9 +82,21 @@ class MicroSoftChatGPT(ChatGPT):
         asyncio.run(self._reply(prompt, _))
 
 
+class OpenAiChatGPTApi(ChatGPT):
+
+    def __init__(self, config):
+        super().__init__()
+        self._openai_api = openai_api(api_key=config.api_key)
+
+    def reply(self, prompt, nickname):
+        logging.info(prompt)
+        self.answer = self._openai_api.ask(prompt=prompt, role='user', convo_id=nickname)
+
+
 _PROVIDER_TO_CHATGPT = {
-    ChatGTProvider.OPENAI: OpenAiChatGPT,
+    ChatGTProvider.OPENAI_RAW: OpenAiChatGPTRaw,
     ChatGTProvider.MICROSOFT: MicroSoftChatGPT,
+    ChatGTProvider.OPENAI_API: OpenAiChatGPTApi,
 }
 
 

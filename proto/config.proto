@@ -2,8 +2,9 @@ syntax = "proto3";
 
 enum ChatGTProvider {
   NONE = 0;
-  OPENAI = 1;
+  OPENAI_RAW = 1;
   MICROSOFT = 2;
+  OPENAI_API = 3;
 }
 
 message AccountInfo {

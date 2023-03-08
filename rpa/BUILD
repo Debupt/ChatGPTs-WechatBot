@@ -11,3 +11,19 @@ py_binary(
         "@selenium_py//:selenium",
     ],
 )
+
+py_library(
+    name = "playwright_wechat",
+    srcs = ["playwright_wechat.py"],
+    deps = [
+        "//utils:utils",
+    ],
+)
+
+py_library(
+    name = "rpa_bot",
+    deps = [
+        ":selenium_wechat",
+        ":playwright_wechat",
+    ],
+)

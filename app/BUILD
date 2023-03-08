@@ -8,6 +8,7 @@ py_binary(
     deps = [
         "//chatgpt:chatgpt",
         "//rpa:selenium_wechat",
+        "//rpa:playwright_wechat",
         "//proto:config_proto",
         "//utils:file_utils",
         "@click_py//:click",

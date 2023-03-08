@@ -6,3 +6,6 @@ sudo dpkg -i packages/bazel_4.2.2-linux-x86_64.deb
 
 # install python dependencies
 pip3 install -r requirements.txt
+
+# playwright initianization
+playwright install

@@ -1,7 +1,7 @@
 bot_config {
-    name: "openai"
+    name: "openai_raw"
     chatgpt_config {
-        provider: OPENAI
+        provider: OPENAI_RAW
         account_info {
             user_name: ""
             password: ""
@@ -16,6 +16,15 @@ bot_config {
     chatgpt_config {
         provider: MICROSOFT
         cookie_path: "config/cookies.json"
+    }
+    trigger_keyword: ""
+}
+
+bot_config {
+    name: "openai_api"
+    chatgpt_config {
+        provider: OPENAI_API
+        api_key: ""
     }
     trigger_keyword: ""
 }
