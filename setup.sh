@@ -11,3 +11,4 @@ pip3 install -r requirements.txt
 
 # playwright initianization
 python3 -m playwright install
+python3 -m playwright install-deps

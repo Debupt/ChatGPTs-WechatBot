@@ -2,6 +2,7 @@ import asyncio
 import logging
 import os
 from queue import Queue
+import time
 
 from proto.config_pb2 import ChatGTProvider
 
@@ -24,13 +25,13 @@ class ChatGPT:
     def run(self):
         while True:
             if self.prompts_queue.empty():
+                time.sleep(1)
                 continue
             nickname, prompt = self.prompts_queue.get()
             self.reply(prompt, nickname)
             logging.info(f'{nickname}: {prompt}, {self.answer}')
             if nickname not in self.replies_queue.keys():
                 self.replies_queue[nickname] = Queue()
-            self.answer = '\n\n\n'.join(self.answer.split())
             self.replies_queue[nickname].put(self.answer.strip())
 
     def reply(self, prompt, nickname):
@@ -51,7 +52,7 @@ class OpenAiChatGPTRaw(ChatGPT):
 
     def reply(self, prompt, nickname):
         conversation_id = None
-        prev_message = None
+        prev_message = ''
         self.answer = ''
         logging.info(prompt)
         if nickname in self._conversation_id.keys():
@@ -63,6 +64,7 @@ class OpenAiChatGPTRaw(ChatGPT):
             prev_message = data['message']
         if not conversation_id:
             self._conversation_id[nickname] = self._openai_chatgpt.conversation_id
+        self.answer = '\n\n\n'.join(self.answer.split())
 
 
 class MicroSoftChatGPT(ChatGPT):
@@ -80,6 +82,7 @@ class MicroSoftChatGPT(ChatGPT):
     def reply(self, prompt, _):
         logging.info(prompt)
         asyncio.run(self._reply(prompt, _))
+        self.answer = '\n'.join(self.answer.split('\n'))
 
 
 class OpenAiChatGPTApi(ChatGPT):
@@ -91,6 +94,7 @@ class OpenAiChatGPTApi(ChatGPT):
     def reply(self, prompt, nickname):
         logging.info(prompt)
         self.answer = self._openai_api.ask(prompt=prompt, role='user', convo_id=nickname)
+        self.answer = '\n\n\n'.join(self.answer.split())
 
 
 _PROVIDER_TO_CHATGPT = {

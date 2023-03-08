@@ -44,7 +44,8 @@ def _parse_config(config_file):
 
 def _chatgpt_get_answer(bot_config, prompt):
     chatgpt_inst = chatgpt_factory(bot_config)
-    return chatgpt_inst.capture_answer(prompt)
+    chatgpt_inst.reply(prompt, prompt)
+    return chatgpt_inst.answer
 
 
 @main.command()
@@ -52,8 +53,11 @@ def _chatgpt_get_answer(bot_config, prompt):
 def chatgpt_test(prompt):
     config = _parse_config(CONFIG_FILE)
     for keyword, bot_config in config.items():
-        answer = _chatgpt_get_answer(bot_config, prompt)
-        print(f'[{keyword}]: {answer}')
+        try:
+            answer = _chatgpt_get_answer(bot_config, prompt)
+            print(f'[{keyword}]: {answer}')
+        except Exception:
+            pass
 
 
 @main.command()
