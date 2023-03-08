@@ -65,7 +65,10 @@ bazel run //app:wechat_bot -- chatgpt_test
 2. once it can response, you can run WechatBot, then you can reply in chatroom with setted `trigger_keyword`
 
 ```bash
-bazel run //app:wechat_bot -- run
+# use firefox
+bazel run //app:chatgpt_bot -- run
+# use playwright
+bazel run //app:chatgpt_bot -- run_v2
 ```
 
 ## TODO
