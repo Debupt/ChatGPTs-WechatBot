@@ -103,6 +103,7 @@ class PlayWrightWeChat:
             need_handle_messages.append(message)
         if not need_handle_messages:
             return
+        logging.info(f'{need_handle_messages}')
         self._chatroom_info[nickname].extend(need_handle_messages)
         chatroom_tread_pool.submit(self.handle_chatroom_messages, need_handle_messages, nickname)
 
@@ -120,7 +121,7 @@ class PlayWrightWeChat:
         chatroom_session.click()
 
     def get_chatroom_messages(self):
-        return self.page.locator('//div[@class="plain"]').all_inner_texts()
+        return self.page.locator('//div[@ng-repeat="message in chatContent"]').all_inner_texts()
 
     def send_message(self, message):
         self.page.locator('//pre[@id="editArea"]').fill(message)
