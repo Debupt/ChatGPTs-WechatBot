@@ -45,7 +45,7 @@ def _parse_config(config_file):
 def _chatgpt_get_answer(bot_config, prompt):
     chatgpt_inst = chatgpt_factory(bot_config)
     chatgpt_inst.reply(prompt, prompt)
-    return chatgpt_inst.answer
+    return ' '.join(chatgpt_inst.answer.split())
 
 
 @main.command()
@@ -56,8 +56,8 @@ def chatgpt_test(prompt):
         try:
             answer = _chatgpt_get_answer(bot_config, prompt)
             print(f'[{keyword}]: {answer}')
-        except Exception:
-            pass
+        except Exception as err:
+            logging.error(err)
 
 
 @main.command()
@@ -72,7 +72,6 @@ def run():
             selenium_wechat_bot.one_iteration()
         except Exception as e:
             logging.warning(e)
-            pass
         selenium_wechat_bot.browser.implicitly_wait(2)
 
 
