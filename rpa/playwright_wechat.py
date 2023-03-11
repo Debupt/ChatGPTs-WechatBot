@@ -121,7 +121,7 @@ class PlayWrightWeChat:
         chatroom_session.click()
 
     def get_chatroom_messages(self):
-        return self.page.locator('//div[@ng-repeat="message in chatContent"]').all_inner_texts()
+        return self.page.locator('//div[@class="content"]').all_inner_texts()
 
     def send_message(self, message):
         self.page.locator('//pre[@id="editArea"]').fill(message)
