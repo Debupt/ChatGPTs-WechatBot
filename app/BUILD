@@ -1,6 +1,7 @@
 package(default_visibility = ["//visibility:public"])
+load("@subpar//:subpar.bzl", "par_binary")
 
-py_binary(
+par_binary(
     name = "chatgpt_bot",
     srcs = [
         "chatgpt_bot.py",

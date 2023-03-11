@@ -37,3 +37,10 @@ http_archive(
     strip_prefix = "click-6.7",
     url = "https://files.pythonhosted.org/packages/95/d9/c3336b6b5711c3ab9d1d3a80f1a3e2afeb9d8c02a7166462f6cc96570897/click-6.7.tar.gz",
 )
+
+http_archive(
+    name = "subpar",
+    sha256 = "b80297a1b8d38027a86836dbadc22f55dc3ecad56728175381aa6330705ac10f",
+    strip_prefix = "subpar-2.0.0",
+    url = "https://github.com/google/subpar/archive/refs/tags/2.0.0.tar.gz"
+)
